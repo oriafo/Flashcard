@@ -2,6 +2,7 @@ import { Component, Input, ViewChild, OnInit, Attribute } from '@angular/core';
 import { IFlash } from 'src/app/component/flash/domain/IFlash.model';
 import { NgForm, NgModel } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { findLast } from '@angular/compiler/src/directive_resolver';
 
 function getRandomNumber() {
   return Math.floor(Math.random() * 10000);
@@ -73,6 +74,12 @@ export class AppComponent {
 
 
     handleEdit(id: number){
+      this.editing = true
+      this.editingId = id
+      const flash = this.flashs.find(flash => flash.id  === id)
+      this.flash.question = flash.question
+      this.flash.answer = flash.answer
+
 
     }
 
@@ -88,6 +95,20 @@ export class AppComponent {
         ...this.flash
       })
       this.handleClear();
+    }
+
+    handleUpdate(){
+      const flash = this.flashs.find(flash => flash.id === this.editingId)
+      flash.question = this.flashForm.value.question
+      flash.answer = this.flashForm.value.answer
+      flash.id = this.editingId
+      flash.show = false
+    }
+
+    handleCancel(){
+      this.editing = false
+      this.flash.question = ""
+      this.flash.answer = ""
     }
 
 
